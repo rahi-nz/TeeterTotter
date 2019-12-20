@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, { useState,useRef } from 'react';
 import "./index.css";
 import Controller from "../Controller";
 import { getLeftPosition, getRightPosition, getRightWeight,getLeftWeight } from "../../store/action";
@@ -8,6 +8,7 @@ import RightSide from "../rightSide";
 
 const TeeterTotter = () => {
     const dispatch = useDispatch();
+    const element = useRef();
     const rightWeight = useSelector(state => state.rightWeight);
     const leftWeight = useSelector(state => state.leftWeight);
     const [start, setStart] = useState(false);
@@ -15,6 +16,7 @@ const TeeterTotter = () => {
     const [rightObj, setRightObj] = useState();
     const [leftObj, setLefttObj] = useState();
     const [bending, setBending] = useState(0);
+    const barOffsetTop = element?.current?.offsetTop;
 
     const startGame = () => {
         setStart(prevState => {return !prevState});
@@ -25,7 +27,7 @@ const TeeterTotter = () => {
         dispatch(getLeftWeight(shapeWeight()));
         dispatch(getRightWeight(shapeWeight()));
         setRightObj(CreateShape());
-        setLefttObj(CreateShape());
+        setLefttObj(Math.floor(Math.random() * 2) + 1);
     };
 
     const rightObject = useSelector(state => state.rightPosition);
@@ -43,6 +45,7 @@ const TeeterTotter = () => {
         return (Math.floor(Math.random() * 5) + 1);
     };
     const calculateBalance = () => {
+
         if(((rightWeight*rightObject) /(leftWeight*right)) ===1){
             setBending(0);
             setGameOver(false);
@@ -58,25 +61,7 @@ const TeeterTotter = () => {
         }
         return 50
     };
-    /**
-     * change object top position with arrow keys
-     */
-    const onKeyPressed = e => {
-        switch (e.keyCode) {
-            case 39:
-                dispatch(getLeftPosition(right+55));
-                break;
-            case 37:
-                dispatch(getLeftPosition(left-55));
-                break;
-            default:
-                return true
-        }
-    };
 
-    useEffect(() => {
-        document.addEventListener("keydown", e => onKeyPressed(e));
-    });
     const style = {
         transform: `skew(10deg,${bending}deg)`
     };
@@ -88,7 +73,7 @@ const TeeterTotter = () => {
                     {
                         start && <>
                             <div className="leftSide">
-                                <LeftSide shape={leftObj} right={right} left={left} onKeyPressed={onKeyPressed} calculateBalance={calculateBalance} weight={leftWeight}/>
+                                <LeftSide shape={leftObj} right={right} left={left} calculateBalance={calculateBalance} weight={leftWeight} barOffsetTop={barOffsetTop}/>
                             </div>
                             <div className="rightSide">
                                 <RightSide shape={rightObj} right={rightObject} weight={rightWeight} />
@@ -96,7 +81,7 @@ const TeeterTotter = () => {
                         </>
                     }
                 </div>
-                <div className="barContainer" style={style}>
+                <div className="barContainer" style={style} ref={element}>
                     <div className='bar'></div>
                     <div className='bar'></div>
                     <div className='bar'></div>

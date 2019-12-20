@@ -2,7 +2,8 @@ import {
   GET_RIGHT_POSITION,
   GET_LEFT_POSITION,
   GET_LEFT_WEIGHT,
-  GET_RIGHT_WEIGHT
+  GET_RIGHT_WEIGHT,
+  GET_HEIGHT
 } from "../action/types";
 
 function reducer(state = {}, action) {
@@ -26,6 +27,11 @@ function reducer(state = {}, action) {
       return {
         ...state,
         rightWeight: action.data
+      };
+    case GET_HEIGHT:
+      return {
+        ...state,
+        innerHeight: action.data
       };
     default:
       return state;

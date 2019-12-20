@@ -2,7 +2,8 @@ import {
   GET_LEFT_POSITION,
   GET_RIGHT_POSITION,
   GET_LEFT_WEIGHT,
-  GET_RIGHT_WEIGHT
+  GET_RIGHT_WEIGHT,
+  GET_HEIGHT
 } from "./types";
 
 export function getLeftPosition(data) {
@@ -26,6 +27,12 @@ export function getLeftWeight(data) {
 export function getRightWeight(data) {
   return {
     type: GET_RIGHT_WEIGHT,
+    data
+  };
+}
+export function getInnerHeight(data) {
+  return {
+    type: GET_HEIGHT,
     data
   };
 }
