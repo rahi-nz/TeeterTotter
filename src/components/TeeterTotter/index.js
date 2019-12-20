@@ -19,15 +19,15 @@ const TeeterTotter = () => {
     const barOffsetTop = element?.current?.offsetTop;
 
     const startGame = () => {
-        setStart(prevState => {return !prevState});
         setGameOver(false);
-        setBending(0);
+        setRightObj(CreateShape());
+        setLefttObj(Math.floor(Math.random() * 2) + 1);
         dispatch(getRightPosition(shapePosition()*55));
         dispatch(getLeftPosition(shapePosition()*55));
         dispatch(getLeftWeight(shapeWeight()));
         dispatch(getRightWeight(shapeWeight()));
-        setRightObj(CreateShape());
-        setLefttObj(Math.floor(Math.random() * 2) + 1);
+        setBending(0);
+        setStart(prevState => {return !prevState});
     };
     /**
      * distance from object to middle of bar
@@ -49,29 +49,29 @@ const TeeterTotter = () => {
         return (Math.floor(Math.random() * 5) + 1);
     };
     const calculateBalance = () => {
-        const rightObjWeight= Number(rightWeight.slice(0,-2));
+        const rightObjWeight= Number(rightWeight?.slice(0,-2));
         const rightObjDistance= 6 - rightObject/55;
-        const leftObjWeight= Number(leftWeight.slice(0,-2));
+        const leftObjWeight= Number(leftWeight?.slice(0,-2));
         const leftObjDistance= 6- right/55;
-
-        if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) === 1){
+        const ratio = (leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance);
+        if(ratio === 1){
             setBending(0);
-            setGameOver(false);
             setStart(false)
-        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 1){
-            setBending(-30);
+        } else if(ratio >= 1 && ratio < 3){
+            setBending(-10);
             setStart(false);
-        }else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) < 1){
-            setBending(30);
+        }else if( ratio < 1 && 0.3 < ratio){
+            setBending(10);
             setStart(false);
-        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 3){
+        } else if(ratio >= 3){
             setBending(-30);
             setGameOver(true);
-        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 0.3){
+            setStart(false);
+        } else if(ratio <= 0.3){
             setBending(30);
             setGameOver(true);
+            setStart(false);
         }
-        return true
     };
 
     const style = {
