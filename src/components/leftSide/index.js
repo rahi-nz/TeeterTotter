@@ -30,7 +30,7 @@ const LeftSide = ({shape,left,right,calculateBalance,weight,barOffsetTop}) => {
 
     useEffect(() => {
         let interval;
-        if(top + height +40 <= barOffsetTop -50) {
+        if(top + height +40 < barOffsetTop -50) {
          interval = setInterval(() => {
                 const newTop= top + 10;
                 setTop(newTop);
