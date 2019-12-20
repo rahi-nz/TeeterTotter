@@ -29,11 +29,15 @@ const TeeterTotter = () => {
         setRightObj(CreateShape());
         setLefttObj(Math.floor(Math.random() * 2) + 1);
     };
-
-    const rightObject = useSelector(state => state.rightPosition);
+    /**
+     * distance from object to middle of bar
+     * @type {number}
+     */
+    const rightObject =  useSelector(state => state.rightPosition);
     const right = useSelector(state => state.leftPosition);
     const left = useSelector(state => state.leftPosition);
-
+    const rightObjDistance= 6 - rightObject/55;
+    const leftObjDistance= 6- right/55;
 
     const CreateShape = () =>{
         return Math.floor(Math.random() * 3) + 1
@@ -45,21 +49,29 @@ const TeeterTotter = () => {
         return (Math.floor(Math.random() * 5) + 1);
     };
     const calculateBalance = () => {
+        const rightObjWeight= Number(rightWeight.slice(0,-2));
+        const rightObjDistance= 6 - rightObject/55;
+        const leftObjWeight= Number(leftWeight.slice(0,-2));
+        const leftObjDistance= 6- right/55;
 
-        if(((rightWeight*rightObject) /(leftWeight*right)) ===1){
+        if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) === 1){
             setBending(0);
             setGameOver(false);
             setStart(false)
-        } else if(((rightWeight*rightObject) /(leftWeight*right)) >= 3){
-            setBending(30);
-            setGameOver(true);
+        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 1){
+            setBending(-30);
             setStart(false);
-        }else if(((rightWeight*rightObject) /(leftWeight*right)) <= 3){
+        }else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) < 1){
+            setBending(30);
+            setStart(false);
+        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 3){
             setBending(-30);
             setGameOver(true);
-            setStart(false);
+        } else if((leftObjWeight*leftObjDistance) /( rightObjWeight*rightObjDistance) >= 0.3){
+            setBending(30);
+            setGameOver(true);
         }
-        return 50
+        return true
     };
 
     const style = {
@@ -67,7 +79,7 @@ const TeeterTotter = () => {
     };
     return (
         <div className="container">
-            <Controller startGame={startGame} name={start ? 'Stop' : 'Start'}/>
+            <Controller startGame={startGame} name={start ? 'Stop' : 'Start'} rightWeight={rightWeight} leftWeight={leftWeight} leftDistance={leftObjDistance} rightDistance={rightObjDistance}/>
             {!gameOver ?             <div className='container'>
                 <div className="shapeContainer">
                     {

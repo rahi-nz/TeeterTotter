@@ -1,5 +1,12 @@
 .controller {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.details {
+    font-size: 13px;
+    margin: 10px;
 }
 button {
     background: #000;
